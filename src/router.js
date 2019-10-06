@@ -1,25 +1,32 @@
 import Vue from 'vue'
-import Router from 'vue-router'
-import Home from './views/Home.vue'
+import VueRouter from 'vue-router'
 
-Vue.use(Router)
+import Login from './components/Login.vue'
+import GeoBlog from './components/GeoBlog.vue'
+import NotFound from './components/NotFound.vue'
 
-export default new Router({
-  mode: 'history',
-  base: process.env.BASE_URL,
-  routes: [
-    {
-      path: '/',
-      name: 'home',
-      component: Home
-    },
-    {
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (about.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "about" */ './views/About.vue')
-    }
-  ]
+Vue.use(VueRouter)
+
+const routes=[
+	{path:'/',name:'home',component:GeoBlog,meta:{private:true}},
+	{path:'/login',name:'login',components:Login},
+	{path:'*',component:NotFound}
+]
+
+const router = new VueRouter({
+	routes,
+	mode:'history',
+	scrollBehavior(to,from,savePosition){
+		if(savePosition){
+			return savePosition
+		}
+		if(to.hash){
+			return{selector:to.hash}
+		}
+		return {x:0,y:0}
+	}
 })
+
+//导航守卫
+
+export default router

@@ -1,13 +1,26 @@
+import 'babel-polyfill'
 import Vue from 'vue'
-import App from './App.vue'
-import router from './router'
-import store from './store'
-import './registerServiceWorker'
+import VueFetch ,{$fetch}  from './plugins/fetch.js'
+import App from './components/App.vue'
+import router from './router.js'
+import * as filters from './filters.js'
+import store from './state'
 
-Vue.config.productionTip = false
+for(const key in filters){
+	Vue.filter(key,filters[key])
+}
 
-new Vue({
-  router,
-  store,
-  render: h => h(App)
-}).$mount('#app')
+Vue.use(VueFetch,{
+	baseUrl:'http://localhost:3000/'
+})
+
+function main(){
+	new Vue({
+		...App,
+		el:'#app',
+		router,
+		store,
+	})
+}
+
+main()
